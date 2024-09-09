@@ -112,8 +112,7 @@ func (a *SimpleAgent) LookForGoal(env enviroment, display bool) bool {
   if a.currentGoal == env.totalGoal {
     fmt.Println("¡Se han encotrado todos los obejtivos!")
     return true
-  } 
-  if counter == maxIterations {
+  } else if counter == maxIterations {
     fmt.Printf("No se encontró la meta; posición final: (%d, %d)\n", a.x, a.y)
     return false
   }
@@ -143,11 +142,6 @@ func NewEnviroment(matrix [][]int, totalGoal int) *enviroment {
     matrix,
     totalGoal,
   }
-}
-
-// Getter de todos los objetivos que hay en el ambiente
-func (e *enviroment) getTotalGoal() int {
-  return e.totalGoal
 }
 
 // printPath imprime el entorno y la percepción del agente
