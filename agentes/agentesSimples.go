@@ -16,6 +16,7 @@ type SimpleAgent struct{
   x, y int
   knowledge map[[5]int]func(a *SimpleAgent)
   ambientPerception [5]int
+  currentGoal int
 }
 
 // NewSimpleAgent crea un nuevo agente simple
@@ -25,6 +26,7 @@ func NewSimpleAgent(x,y int, knowledge map[[5]int]func(a *SimpleAgent)) *SimpleA
     y,
     knowledge,
     [5]int{},
+    0,
   }
 }
 
@@ -55,7 +57,6 @@ func (a *SimpleAgent) generatePerception(env enviroment) {
     Right
     Down
     Left
-    Current
   )
 
   // Se genera una percepción
@@ -80,8 +81,7 @@ func (a *SimpleAgent) generatePerception(env enviroment) {
     a.ambientPerception[Left] = 0
   }
   if env.matrix[a.x][a.y] == goal {
-    a.ambientPerception[Current] = 1
-    fmt.Println("Goal!")
+    a.currentGoal++
   } 
 }
 
@@ -99,16 +99,18 @@ func (a *SimpleAgent) generateAction(env enviroment) {
 func (a *SimpleAgent) LookForGoal(env enviroment, display bool) bool {
   counter, maxIterations := 0, 20
 
-  for ; a.ambientPerception[4] != 1 && counter < maxIterations; counter++ {
+  for ; a.currentGoal <= env.totalGoal && counter < maxIterations; counter++ {
     if display {
       env.printPath(a, counter)
     } else {
       a.generatePerception(env)
       a.generateAction(env)
     }
-  }
+  } 
 
-  if counter == maxIterations {
+  if a.currentGoal == env.totalGoal {
+    fmt.Println("¡Se han encotrado todos los obejtivos!")
+  } else if counter == maxIterations {
     fmt.Printf("No se encontró la meta; posición final: (%d, %d)\n", a.x, a.y)
     return false
   }
@@ -119,28 +121,42 @@ func (a *SimpleAgent) LookForGoal(env enviroment, display bool) bool {
 // enviroment representa el entorno del agente
 type enviroment struct {
   matrix [][]int
+  totalGoal int
 }
 
 // NewEnviroment crea un nuevo entorno
-func NewEnviroment(matrix [][]int) *enviroment {
+func NewEnviroment(matrix [][]int, totalGoal int) *enviroment {
+  if totalGoal == -1 {
+    for _, row := range matrix {
+      for _, value := range row {
+        if value == goal {
+          totalGoal++
+        }
+      }
+    }
+  }
   return &enviroment{
     matrix,
+    totalGoal,
   }
+}
+
+// Getter de todos los objetivos que hay en el ambiente
+func (e *enviroment) getTotalGoal() int {
+  return e.totalGoal
 }
 
 // printPath imprime el entorno y la percepción del agente
 func (env *enviroment) printPath(a *SimpleAgent, counter int) {
   fmt.Print("\033[H\033[2J") 
-  if env.matrix[a.x][a.y] != goal {
-    env.matrix[a.x][a.y] = 3
-  }
+  a.generatePerception(*env)
+  env.matrix[a.x][a.y] = 3
 
   fmt.Println("Iteración:", counter)
   for _, row := range env.matrix {
     fmt.Println(row)
   }
 
-  a.generatePerception(*env)
   env.matrix[a.x][a.y] = 0 
   a.generateAction(*env)
 
