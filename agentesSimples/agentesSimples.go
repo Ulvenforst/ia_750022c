@@ -10,11 +10,14 @@ const (
   goal
 )
 
+// SimpleAgent representa un agente simple
 type SimpleAgent struct{
   x, y int
   knowledge map[[5]int]func(a *SimpleAgent)
   ambientPerception [5]int
 }
+
+// NewSimpleAgent crea un nuevo agente simple
 func NewSimpleAgent(x,y int, knowledge map[[5]int]func(a *SimpleAgent)) *SimpleAgent {
   return &SimpleAgent{
     x,
@@ -23,6 +26,8 @@ func NewSimpleAgent(x,y int, knowledge map[[5]int]func(a *SimpleAgent)) *SimpleA
     [5]int{},
   }
 }
+
+// MoveUp, MoveRight, MoveDown y MoveLeft son los actuadores del agente
 func (a *SimpleAgent) MoveUp() {
   a.x--
 }
@@ -35,6 +40,7 @@ func (a *SimpleAgent) MoveDown() {
 func (a *SimpleAgent) MoveLeft() {
   a.y--
 }
+
 // generatePerception genera una percepción basada en el entorno
 func (a *SimpleAgent) generatePerception(env enviroment) {
   // Simulan los sensores
@@ -77,15 +83,17 @@ func (a *SimpleAgent) generatePerception(env enviroment) {
     fmt.Println("Goal!")
   } 
 }
+
 // generateAction genera una acción basada en la percepción actual
 func (a *SimpleAgent) generateAction(env enviroment) {
   // Por medio de los actuadores se generó una acción usando el comportamiento
   if action, exists := a.knowledge[a.ambientPerception]; exists {
     action(a)
   } else {
-    fmt.Println("No se encontró una acción para la percepción")
+    fmt.Printf("No se encontró una acción para la percepción: %v\n", a.ambientPerception)
   }
 }
+
 // LookForGoal busca la meta en el entorno
 func (a *SimpleAgent) LookForGoal(env enviroment, display bool) bool {
   counter, maxIterations := 0, 20
@@ -107,14 +115,19 @@ func (a *SimpleAgent) LookForGoal(env enviroment, display bool) bool {
   return true
 }
 
+// enviroment representa el entorno del agente
 type enviroment struct {
   matrix [][]int
 }
+
+// NewEnviroment crea un nuevo entorno
 func NewEnviroment(matrix [][]int) *enviroment {
   return &enviroment{
     matrix,
   }
 }
+
+// printPath imprime el entorno y la percepción del agente
 func (env *enviroment) printPath(a *SimpleAgent, counter int) {
   fmt.Print("\033[H\033[2J") 
   if env.matrix[a.x][a.y] != goal {
@@ -134,4 +147,3 @@ func (env *enviroment) printPath(a *SimpleAgent, counter int) {
 
   time.Sleep(1 * time.Second)
 }
-
