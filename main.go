@@ -12,9 +12,10 @@ func main() {
 func testSimpleAgent() {
   // 1 es un obstáculo y 2 es el objetivo.
   envMatrix := [][]int{
-    {2,0,2},
-    {0,0,0},
-    {0,0,0},
+    {0,0,0,0},
+    {0,1,1,0},
+    {0,1,0,0},
+    {2,0,2,1},
   }
   enviroment := agents.NewEnviroment(envMatrix, -1)
   // El conocimiento se representa mediante una tabla. 
@@ -36,7 +37,7 @@ func testSimpleAgent() {
     {0, 1, 0, 0}: func(a *agents.SimpleAgent) { a.MoveRight() },
     {0, 0, 1, 0}: func(a *agents.SimpleAgent) { a.MoveDown() },
   }
-  agente := agents.NewSimpleAgent(1,2, knowledge)
+  agente := agents.NewSimpleAgent(2,0, knowledge)
 
   agente.LookForGoal(*enviroment, true) 
 }
