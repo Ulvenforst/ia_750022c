@@ -27,7 +27,6 @@ func (a *SimpleAgent) MoveDown() {
 func (a *SimpleAgent) MoveLeft() {
   a.y--
 }
-
 func NewSimpleAgent(x,y int, knowledge map[[5]int]func(a *SimpleAgent)) *SimpleAgent {
   return &SimpleAgent{
     x,
@@ -37,16 +36,17 @@ func NewSimpleAgent(x,y int, knowledge map[[5]int]func(a *SimpleAgent)) *SimpleA
   }
 }
 
-type Enviroment struct {
+type enviroment struct {
   matrix [][]int
 }
-func NewEnviroment(matrix [][]int) *Enviroment {
-  return &Enviroment{
+func NewEnviroment(matrix [][]int) *enviroment {
+  return &enviroment{
     matrix,
   }
 }
 
-func (a *SimpleAgent) GeneratePerception(Enviroment Enviroment) {
+// generatePerception genera una percepción basada en el entorno
+func (a *SimpleAgent) generatePerception(enviroment enviroment) {
   // Simulan los sensores
   moveUp := a.x - 1
   moveRight := a.y + 1
@@ -62,46 +62,47 @@ func (a *SimpleAgent) GeneratePerception(Enviroment Enviroment) {
   )
 
   // Se genera una percepción
-  if moveUp >= 0 && Enviroment.matrix[moveUp][a.y] != wall {
+  if moveUp >= 0 && enviroment.matrix[moveUp][a.y] != wall {
     a.ambientPerception[Up] = 1 
   } else {
     a.ambientPerception[Up] = 0
   }
-  if moveRight < len(Enviroment.matrix[0]) && Enviroment.matrix[a.x][moveRight] != wall {
+  if moveRight < len(enviroment.matrix[0]) && enviroment.matrix[a.x][moveRight] != wall {
     a.ambientPerception[Right] = 1
   } else {
     a.ambientPerception[Right] = 0
   }
-  if moveDown < len(Enviroment.matrix) && Enviroment.matrix[moveDown][a.y] != wall {
+  if moveDown < len(enviroment.matrix) && enviroment.matrix[moveDown][a.y] != wall {
     a.ambientPerception[Down] = 1 
   } else {
     a.ambientPerception[Down] = 0
   }
-  if moveLeft >= 0 && Enviroment.matrix[a.x][moveLeft] != wall {
+  if moveLeft >= 0 && enviroment.matrix[a.x][moveLeft] != wall {
     a.ambientPerception[Left] = 1 
   } else {
     a.ambientPerception[Left] = 0
   }
-  if Enviroment.matrix[a.x][a.y] == goal {
+  if enviroment.matrix[a.x][a.y] == goal {
     a.ambientPerception[Current] = 1
     fmt.Println("Goal!")
   } 
 }
 
-
-func (a *SimpleAgent) GenerateAction(env Enviroment) {
+// generateAction genera una acción basada en la percepción actual
+func (a *SimpleAgent) generateAction(env enviroment) {
   // Por medio de los actuadores se generó una acción usando el comportamiento
   if action, exists := a.knowledge[a.ambientPerception]; exists {
     action(a)
   }
 }
 
-func (a *SimpleAgent) LookForGoal(env Enviroment) bool {
+// LookForGoal busca la meta en el entorno
+func (a *SimpleAgent) LookForGoal(env enviroment) bool {
   counter, maxIterations := 0, 20
 
   for ; a.ambientPerception[4] != 1 && counter < maxIterations; counter++ {
-    a.GeneratePerception(env)
-    a.GenerateAction(env)
+    a.generatePerception(env)
+    a.generateAction(env)
   }
 
   if counter == maxIterations {
@@ -113,7 +114,8 @@ func (a *SimpleAgent) LookForGoal(env Enviroment) bool {
 }
 
 // * Todo lo que dice "Visualización" no es necesario para el funcionamiento del agente
-func (a *SimpleAgent) VisualizePath(env Enviroment) bool {
+// Esta función no está optimizada, es solo para visualizar el agente en el entorno.
+func (a *SimpleAgent) VisualizePath(env enviroment) bool {
   counter, maxIterations := 0, 20
   env.matrix[a.x][a.y] = 3 // Visualización: se pinta la posición inicial
 
@@ -128,9 +130,9 @@ func (a *SimpleAgent) VisualizePath(env Enviroment) bool {
       fmt.Println(row)
     }
 
-    a.GeneratePerception(env)
+    a.generatePerception(env)
     env.matrix[a.x][a.y] = 0 // Visualización: se borra la posición actual
-    a.GenerateAction(env)
+    a.generateAction(env)
     fmt.Println("Percepción:", a.ambientPerception) // Visualización: imprime la percepción
     if env.matrix[a.x][a.y] != goal { // Visualización: se pinta la nueva posición
       env.matrix[a.x][a.y] = 3   

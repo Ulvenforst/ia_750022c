@@ -39,7 +39,6 @@ func testSimpleAgent() {
   }
   agente := agentS.NewSimpleAgent(1,2, knowledge)
 
-  // agente.GeneratePerception(*enviroment)
-  // agente.LookForGoal(*enviroment)
-  agente.VisualizePath(*enviroment)
+  // agente.LookForGoal(*enviroment) // Esta función retorna si encontró el objetivo o no.
+  agente.VisualizePath(*enviroment) // Esta función permite visualizar el agente en el entorno.
 }
