@@ -1,7 +1,7 @@
 package main
 
 import (
-  agent "github.com/Ulvenforst/ia_750022c/agentes"
+  agents "github.com/Ulvenforst/ia_750022c/agentes"
 )
 
 func main() {
@@ -18,26 +18,26 @@ func testSimpleAgent() {
     {0,1,0,0},
     {0,0,0,1},
   }
-  enviroment := agent.NewEnviroment(envMatrix)
+  enviroment := agents.NewEnviroment(envMatrix)
   // El conocimiento se representa mediante una tabla.
-  knowledge := map[[5]int]func(a *agent.SimpleAgent){
-    {1, 1, 1, 1, 0}: func(a *agent.SimpleAgent) { a.MoveUp() },
-    {1, 1, 0, 1, 0}: func(a *agent.SimpleAgent) { a.MoveUp() },
-    {1, 0, 1, 1, 0}: func(a *agent.SimpleAgent) { a.MoveUp() },
-    {1, 0, 0, 1, 0}: func(a *agent.SimpleAgent) { a.MoveLeft() },
-    {0, 1, 1, 1, 0}: func(a *agent.SimpleAgent) { a.MoveLeft() },
-    {0, 1, 0, 1, 0}: func(a *agent.SimpleAgent) { a.MoveRight() },
-    {0, 0, 1, 1, 0}: func(a *agent.SimpleAgent) { a.MoveLeft() },
-    {0, 0, 0, 1, 0}: func(a *agent.SimpleAgent) { a.MoveLeft() },
-    {1, 1, 1, 0, 0}: func(a *agent.SimpleAgent) { a.MoveUp() },
-    {1, 1, 0, 0, 0}: func(a *agent.SimpleAgent) { a.MoveRight() },
-    {1, 0, 1, 0, 0}: func(a *agent.SimpleAgent) { a.MoveDown() },
-    {1, 0, 0, 0, 0}: func(a *agent.SimpleAgent) { a.MoveUp() },
-    {0, 1, 1, 0, 0}: func(a *agent.SimpleAgent) { a.MoveRight() },
-    {0, 1, 0, 0, 0}: func(a *agent.SimpleAgent) { a.MoveRight() },
-    {0, 0, 1, 0, 0}: func(a *agent.SimpleAgent) { a.MoveDown() },
+  knowledge := map[[5]int]func(a *agents.SimpleAgent){
+    {1, 1, 1, 1, 0}: func(a *agents.SimpleAgent) { a.MoveUp() },
+    {1, 1, 0, 1, 0}: func(a *agents.SimpleAgent) { a.MoveUp() },
+    {1, 0, 1, 1, 0}: func(a *agents.SimpleAgent) { a.MoveUp() },
+    {1, 0, 0, 1, 0}: func(a *agents.SimpleAgent) { a.MoveLeft() },
+    {0, 1, 1, 1, 0}: func(a *agents.SimpleAgent) { a.MoveLeft() },
+    {0, 1, 0, 1, 0}: func(a *agents.SimpleAgent) { a.MoveRight() },
+    {0, 0, 1, 1, 0}: func(a *agents.SimpleAgent) { a.MoveLeft() },
+    {0, 0, 0, 1, 0}: func(a *agents.SimpleAgent) { a.MoveLeft() },
+    {1, 1, 1, 0, 0}: func(a *agents.SimpleAgent) { a.MoveUp() },
+    {1, 1, 0, 0, 0}: func(a *agents.SimpleAgent) { a.MoveRight() },
+    {1, 0, 1, 0, 0}: func(a *agents.SimpleAgent) { a.MoveDown() },
+    {1, 0, 0, 0, 0}: func(a *agents.SimpleAgent) { a.MoveUp() },
+    {0, 1, 1, 0, 0}: func(a *agents.SimpleAgent) { a.MoveRight() },
+    {0, 1, 0, 0, 0}: func(a *agents.SimpleAgent) { a.MoveRight() },
+    {0, 0, 1, 0, 0}: func(a *agents.SimpleAgent) { a.MoveDown() },
   }
-  agente := agent.NewSimpleAgent(1,2, knowledge)
+  agente := agents.NewSimpleAgent(1,2, knowledge)
 
   agente.LookForGoal(*enviroment, true) 
 }
