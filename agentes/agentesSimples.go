@@ -1,4 +1,4 @@
-package agentesSimples
+package agentes
 
 import (
   "fmt"
