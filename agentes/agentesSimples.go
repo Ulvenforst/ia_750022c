@@ -1,3 +1,4 @@
+// Correspondiente a clases de agentes
 package agentes
 
 import (

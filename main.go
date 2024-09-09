@@ -8,9 +8,8 @@ func main() {
   testSimpleAgent()
 }
 
+// En un agente simple a cada percepción se le asocia una acción. 
 func testSimpleAgent() {
-  // En un agente simple a cada percepción se le asocia una acción. 
-
   // 1 es un obstáculo y 2 es el objetivo.
   envMatrix := [][]int{
     {2,0,0,0},
